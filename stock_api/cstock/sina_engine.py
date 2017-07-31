@@ -10,8 +10,8 @@ import re
 import json
 import datetime
 
-from cstock.base_engine import Engine
-from cstock.model import Stock, ParserException
+from stock_api.cstock.base_engine import Engine
+from stock_api.cstock.model import Stock, ParserException
 
 class SinaEngine(Engine):
     """
