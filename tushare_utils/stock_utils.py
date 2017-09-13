@@ -1,8 +1,8 @@
-import tushare as ts
-from pandas import Series, DataFrame
-import pandas as pd
 import datetime
-from tushare_utils.datetime_utils import DateTimeUtils
+
+import tushare as ts
+
+from common.datetime_utils import DateTimeUtils
 
 
 class StockInstance:
@@ -94,8 +94,8 @@ if __name__ == '__main__':
 #    if ma5 > ma10 and ma10 > ma20:
 #        print(u"5日均价 > 10日均价 > 20日均价 > 60日均价")
 
-#    if stock.change(1000) > 300:
-#        print(u"过去1000天最高最低价相差不超过300%")
+    if stock.change(1000) > 300:
+        print(u"过去1000天最高最低价相差不超过300%")
 
     if stock.close() > stock.max(30):
         print(u"当日的收盘价高于过去30日内的最高价")
