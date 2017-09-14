@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from .basic_type import IndexType
+from ..tushare_utils.stock_utils import StockInstance
 
 
 class IndexValue:
@@ -19,7 +20,7 @@ class CloseIncreaseValue(IndexValue):
         super(CloseIncreaseValue, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).get_current_day_gain()
 
 
 class AvgPriceValue(IndexValue):
@@ -28,7 +29,7 @@ class AvgPriceValue(IndexValue):
         super(AvgPriceValue, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).ma_5_10_20(self._start)[0]
 
 
 class AvgVolumeValue(IndexValue):
@@ -37,7 +38,7 @@ class AvgVolumeValue(IndexValue):
         super(AvgVolumeValue, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).v_ma(self._duration, self._start)
 
 
 class MaxPriceCloseValue(IndexValue):
@@ -46,7 +47,7 @@ class MaxPriceCloseValue(IndexValue):
         super(MaxPriceCloseValue, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).max(self._duration, self._start)
 
 
 class MinPriceCloseValue(IndexValue):
@@ -55,16 +56,16 @@ class MinPriceCloseValue(IndexValue):
         super(MinPriceCloseValue, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).min(self._duration, self._start)
 
 
-class VolumeValue(IndexValue):
+class PriceDifference(IndexValue):
 
     def __init__(self, start, duration):
-        super(VolumeValue, self).__init__(start, duration)
+        super(PriceDifference, self).__init__(start, duration)
 
     def value(self, stock_id):
-        pass
+        return StockInstance(stock_id).change(self._duration, self._start)
 
 
 class IndexValueFactory:
@@ -81,8 +82,8 @@ class IndexValueFactory:
             return MaxPriceCloseValue(start, duration)
         elif index_type == IndexType.MIN:
             return MinPriceCloseValue(start, duration)
-        elif index_type == IndexType.VOLUME:
-            return VolumeValue(start, duration)
+        elif index_type == IndexType.P_DIFF:
+            return PriceDifference(start, duration)
         else:
             return None
 

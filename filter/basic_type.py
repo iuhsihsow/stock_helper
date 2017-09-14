@@ -15,4 +15,4 @@ class IndexType(Enum):
     V_AVG = 3
     MAX = 4
     MIN = 5
-    VOLUME = 6
+    P_DIFF = 7

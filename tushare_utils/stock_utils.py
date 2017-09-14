@@ -78,6 +78,10 @@ class StockInstance:
         rlt = ts.get_k_data(self._code, start, end)
         return rlt['high'].max()
 
+    def min(self, duration, start=None):
+        start, end = DateTimeUtils.start_end_date(30)
+        rlt = ts.get_k_data(self._code, start, end)
+        return rlt['high'].min()
 
 if __name__ == '__main__':
     stock = StockInstance('600848')
