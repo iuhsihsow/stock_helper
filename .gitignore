@@ -1,3 +1,4 @@
 .idea/
 .ipynb_checkpoints/
 /tushare_utils/__pycache__/*.pyc
+*.pyc

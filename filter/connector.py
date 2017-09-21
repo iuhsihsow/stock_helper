@@ -5,7 +5,7 @@
 class Connector:
 
     def __init__(self, stock_ids):
-        self.stock_ids = []
+        self.stock_ids = stock_ids
 
 
 class InputConnector(Connector):
