@@ -13,7 +13,7 @@ class Filter:
     def can_pass(self, stock_id):
         for j in self._conditions:
             if not j.can_pass(stock_id):
-                self._failed_infos.append({"id" : stock_id, "condition" : j.id()})
+                self._failed_infos.append({"id" : stock_id, "condition": j.id()})
                 return False
         self._passed_ids.append(stock_id)
         return True
@@ -21,9 +21,7 @@ class Filter:
     def to_json(self):
         filter = dict()
         conditions = []
-        for c in self._conditions:
-            c_json = c.to_json()
-            conditions.append(json.loads(c_json))
+        conditions.append(json.loads(c.to_json() for c in self._conditions))
         filter['conditions'] = conditions
         return json.dumps(filter)
 
