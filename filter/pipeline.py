@@ -8,24 +8,37 @@ from condition import ConstantCondition, IndexValueCondition
 from filter import Filter
 import json
 
-class WorkFlow:
+
+class Pipeline:
 
     def __init__(self, inputs, filter):
         self._inputs = inputs
         self._filter = filter
+        self._outputs = []
 
     @staticmethod
-    def from_json(self, json_str):
+    def from_json(json_str):
         workflow = json.loads(json_str)
         _inputs = workflow['stock_ids']
-        _filter = workflow['filter']
-        return WorkFlow(_inputs, _filter)
+#        filter_dict = workflow['filter']
+#        json_filter_dict = json.dumps(filter_dict)
+#        _filter = Filter.from_json(json_filter_dict)
+
+        _filter = Filter.from_json(json.dumps(workflow['filter']))
+        return Pipeline(_inputs, _filter)
 
     def to_json(self):
         workflow = dict()
         workflow['stock_ids'] = self._inputs
-        workflow['filter'] = self._filter.to_json()
+        workflow['filter'] = json.loads(self._filter.to_json())
         return json.dumps(workflow)
+
+    def run(self):
+        for s in self._inputs:
+            if self._filter.can_pass(s):
+                self._outputs.append(s)
+        self._filter.print_result()
+
 
 if __name__ == '__main__':
     # inputs
@@ -41,9 +54,11 @@ if __name__ == '__main__':
     conditions.append(condition)
 
     con_filter = Filter(conditions)
-    passed_ids = []
-    for s in stock_ids:
-        if con_filter.can_pass(s):
-            passed_ids.append(s)
 
-    con_filter.print_result()
+    pipeline = Pipeline(stock_ids, con_filter)
+    json_pipeline = pipeline.to_json()
+    print(json_pipeline)
+
+    pipeline_copy = Pipeline.from_json(json_pipeline)
+    pipeline_copy.run()
+

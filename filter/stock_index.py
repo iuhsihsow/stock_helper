@@ -3,6 +3,7 @@
 import json
 from basic_type import IndexType
 from tushare_utils.stock_utils import StockInstance
+from common.datetime_utils import DateTimeUtils
 
 
 class IndexValue:
@@ -16,7 +17,11 @@ class IndexValue:
         pass
 
     def to_json(self):
-        return json.dumps({"type":self._type, "start": self._start, "duration":self._duration})
+        value_dict = {
+            "type": self._type.name,
+            "start": DateTimeUtils.date_to_string(self._start),
+            "duration": self._duration}
+        return json.dumps(value_dict)
 
 
 class CloseIncreaseValue(IndexValue):
@@ -77,17 +82,17 @@ class IndexValueFactory:
 
     @staticmethod
     def create(index_type, start, duration):
-        if index_type == IndexType.CLOSE_INCREASE:
+        if index_type == IndexType.CLOSE_INCREASE.name or index_type == IndexType.CLOSE_INCREASE:
             return CloseIncreaseValue(index_type, start, duration)
-        elif index_type == IndexType.AVG:
+        elif index_type == IndexType.AVG.name or index_type == IndexType.AVG:
             return AvgPriceValue(index_type, start, duration)
-        elif index_type == IndexType.V_AVG:
+        elif index_type == IndexType.V_AVG.name or index_type == IndexType.V_AVG:
             return AvgVolumeValue(index_type, start, duration)
-        elif index_type == IndexType.MAX:
+        elif index_type == IndexType.MAX.name or index_type == IndexType:
             return MaxPriceCloseValue(index_type, start, duration)
-        elif index_type == IndexType.MIN:
+        elif index_type == IndexType.MIN.name or index_type == IndexType.MIN:
             return MinPriceCloseValue(index_type,start, duration)
-        elif index_type == IndexType.P_DIFF:
+        elif index_type == IndexType.P_DIFF.name or index_type == IndexType.P_DIFF:
             return PriceDifference(index_type,start, duration)
         else:
             return None
@@ -95,7 +100,10 @@ class IndexValueFactory:
     @staticmethod
     def from_json(json_str):
         value = json.loads(json_str)
-        return IndexValueFactory.create(value['type'], value['start'], value['duration'])
+        return IndexValueFactory.create(
+            value['type'],
+            DateTimeUtils.date_from_string(value['start']),
+            value['duration'])
 
 
 

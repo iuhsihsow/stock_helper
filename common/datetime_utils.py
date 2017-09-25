@@ -8,6 +8,10 @@ class DateTimeUtils:
         return date.strftime('%Y-%m-%d')
 
     @staticmethod
+    def date_from_string(date_string):
+        return datetime.datetime.strptime(date_string, '%Y-%m-%d').date()
+
+    @staticmethod
     def today():
         return datetime.date.today()
 

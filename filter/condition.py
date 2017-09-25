@@ -37,9 +37,9 @@ class ConstantCondition(Condition):
     def to_json(self):
         condition = dict()
         condition['id'] = self._id
-        condition['type'] = ConditionType.INDEX_TO_CONST
+        condition['type'] = ConditionType.INDEX_TO_CONST.name
         condition['index_value'] = json.loads(self._i_value.to_json())
-        condition['operator'] = self._operator
+        condition['operator'] = self._operator.name
         condition['const_value'] = self._c_value
         return json.dumps(condition)
 
@@ -70,9 +70,9 @@ class IndexValueCondition(Condition):
     def to_json(self):
         condition = dict()
         condition['id'] = self._id
-        condition['type'] = ConditionType.INDEX_TO_INDEX
+        condition['type'] = ConditionType.INDEX_TO_INDEX.name
         condition['value_1'] = json.loads(self._value_1.to_json())
-        condition['operator'] = self._operator
+        condition['operator'] = self._operator.name
         condition['value_2'] = json.loads(self._value_2.to_json())
         return json.dumps(condition)
 
@@ -90,11 +90,10 @@ class ConditionFactory:
     @staticmethod
     def from_json(json_str):
         condition = json.loads(json_str)
-        if condition['type'] == ConditionType.INDEX_TO_INDEX:
-
-            pass
-        elif condition['type'] == ConditionType.INDEX_TO_CONST:
-            pass
+        if condition['type'] == ConditionType.INDEX_TO_INDEX.name:
+            return IndexValueCondition.from_json(json_str)
+        elif condition['type'] == ConditionType.INDEX_TO_CONST.name:
+            return ConstantCondition.from_json(json_str)
         else:
             return None
 

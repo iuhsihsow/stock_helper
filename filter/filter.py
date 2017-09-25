@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-
+from condition import ConditionFactory
 
 class Filter:
 
@@ -28,12 +28,13 @@ class Filter:
         return json.dumps(filter)
 
     @staticmethod
-    def from_json(self, json_str):
-        filter = json.loads(json_str)
-        conditions = filter['conditions']
-        for c in conditions:
-            self._conditions.append(c.from_json())
-        pass
+    def from_json(json_str):
+        filter_dict = json.loads(json_str)
+        conditions_value = filter_dict['conditions']
+        conditions_object = []
+        for c in conditions_value:
+            conditions_object.append(ConditionFactory.from_json(json.dumps(c)))
+        return Filter(conditions_object)
 
     def print_result(self):
         for f in self._failed_infos:
