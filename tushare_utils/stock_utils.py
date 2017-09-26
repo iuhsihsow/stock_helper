@@ -11,7 +11,7 @@ class StockInstance:
         self._code = code
 
     def get_current_day_gain(self):
-        today = DateTimeUtils.bygone_day(1)
+        today = DateTimeUtils.stock_today()
         str_today = DateTimeUtils.date_to_string(today)
         five_days_ago = DateTimeUtils.bygone_day(5, today)
         str_five_days_ago =DateTimeUtils.date_to_string(five_days_ago)
@@ -29,7 +29,7 @@ class StockInstance:
         return delta
 
     def is_increase(self, duration=5):
-        today = DateTimeUtils.bygone_day(1)
+        today = DateTimeUtils.stock_today()
         str_today = DateTimeUtils.date_to_string(today)
         bygone_days = today - datetime.timedelta(days=duration)
         str_bygone_days= bygone_days.strftime('%Y-%m-%d')
@@ -42,16 +42,16 @@ class StockInstance:
                 break
         return always_increase
 
-    def v_ma(self, duration, start=None):
-        today = start if start is not None else DateTimeUtils.bygone_day(1)
+    def v_ma(self, duration, end=None):
+        today = end if end is not None else DateTimeUtils.stock_today()
         str_today = DateTimeUtils.date_to_string(today)
         bygone_days = DateTimeUtils.bygone_day(duration, today)
         str_bygone_days = DateTimeUtils.date_to_string(bygone_days)
         rlt = ts.get_k_data(self._code, start=str_bygone_days, end=str_today)
         return rlt['volume'].mean()
 
-    def ma_5_10_20(self, start=None):
-        today = start if start is not None else DateTimeUtils.bygone_day(1)
+    def ma_5_10_20(self, end=None):
+        today = end if end is not None else DateTimeUtils.stock_today()
         str_today = DateTimeUtils.date_to_string(today)
         bygone_days = DateTimeUtils.bygone_day(5, today)
         str_bygone_days = DateTimeUtils.date_to_string(bygone_days)
@@ -61,30 +61,34 @@ class StockInstance:
         ma20 = rlt['ma20'].values[0]
         return ma5, ma10, ma20
 
-    def change(self, duration, start=None):
-        start, end = DateTimeUtils.start_end_date(duration, DateTimeUtils.bygone_day(1))
-        rlt = ts.get_k_data(self._code, start, end)
+    def change(self, duration, end=None):
+        end_date = end if end is not None else DateTimeUtils.stock_today()
+        str_start, str_end = DateTimeUtils.start_end_date(duration, end_date)
+        rlt = ts.get_k_data(self._code, str_start, str_end)
         max = rlt['high'].max()
         min = rlt['low'].min()
         return (max - min) / min * 100.0
 
     def close(self, date=None):
-        start, end = DateTimeUtils.start_end_date(5, DateTimeUtils.bygone_day(1) if date is None else date)
+        start, end = DateTimeUtils.start_end_date(5, DateTimeUtils.stock_today() if date is None else date)
         rlt = ts.get_k_data(self._code, start, end)
         return rlt['close'].values[0]
 
-    def max(self, duration, start=None):
-        start, end = DateTimeUtils.start_end_date(30)
-        rlt = ts.get_k_data(self._code, start, end)
+    def max(self, duration, end=None):
+        end_date = end if end is not None else DateTimeUtils.stock_today()
+        str_start, str_end = DateTimeUtils.start_end_date(30, end_date)
+        rlt = ts.get_k_data(self._code, str_start, str_end)
         return rlt['high'].max()
 
-    def min(self, duration, start=None):
-        start, end = DateTimeUtils.start_end_date(30)
-        rlt = ts.get_k_data(self._code, start, end)
+    def min(self, duration, end=None):
+        end_date = end if end is not None else DateTimeUtils.stock_today()
+        str_start, str_end = DateTimeUtils.start_end_date(30, end_date)
+        rlt = ts.get_k_data(self._code, str_start, str_end)
         return rlt['high'].min()
 
 if __name__ == '__main__':
-    stock = StockInstance('600848')
+    pass
+#    stock = StockInstance('600848')
 #    if stock.get_current_day_gain() > 4:
 #        print(u"当日收盘涨幅大于4%")
 
@@ -98,8 +102,8 @@ if __name__ == '__main__':
 #    if ma5 > ma10 and ma10 > ma20:
 #        print(u"5日均价 > 10日均价 > 20日均价 > 60日均价")
 
-    if stock.change(1000) > 300:
-        print(u"过去1000天最高最低价相差不超过300%")
+#    if stock.change(1000) > 300:
+#        print(u"过去1000天最高最低价相差不超过300%")
 
-    if stock.close() > stock.max(30):
-        print(u"当日的收盘价高于过去30日内的最高价")
+#    if stock.close() > stock.max(30):
+#        print(u"当日的收盘价高于过去30日内的最高价")

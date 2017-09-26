@@ -14,3 +14,5 @@ class BasicsTestCase(unittest.TestCase):
         self.assertFalse(stock.ma_5_10_20() is None)
         self.assertFalse(stock.close() is None)
         self.assertFalse(stock.max(5) is None)
+        self.assertFalse(stock.min(5) is None)
+        self.assertFalse(stock.change(5) is None)

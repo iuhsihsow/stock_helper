@@ -3,6 +3,7 @@
 import json
 from condition import ConditionFactory
 
+
 class Filter:
 
     def __init__(self, conditions):
@@ -21,7 +22,11 @@ class Filter:
     def to_json(self):
         filter = dict()
         conditions = []
-        conditions.append(json.loads(c.to_json() for c in self._conditions))
+        for c in self._conditions:
+            str = c.to_json()
+            c_dict = json.loads(str)
+            conditions.append(c_dict)
+#        conditions.append(json.loads(c.to_json() for c in self._conditions))
         filter['conditions'] = conditions
         return json.dumps(filter)
 

@@ -4,6 +4,7 @@ import json
 from basic_type import ComparisionOperator, ConditionType
 from stock_index import IndexValueFactory
 
+
 class Condition:
 
     def __init__(self, id):
@@ -48,7 +49,7 @@ class ConstantCondition(Condition):
         condition = json.loads(json_str)
         return ConstantCondition(condition['id'],
                                  IndexValueFactory.from_json(json.dumps(condition['index_value'])),
-                                 condition['operator'],
+                                 ComparisionOperator[condition['operator']],
                                  condition['const_value'])
 
 
@@ -81,7 +82,7 @@ class IndexValueCondition(Condition):
         condition = json.loads(json_str)
         return IndexValueCondition(condition['id'],
                                    IndexValueFactory.from_json(json.dumps(condition['value_1'])),
-                                   condition['operator'],
+                                   ComparisionOperator[condition['operator']],
                                    IndexValueFactory.from_json(json.dumps(condition['value_2'])))
 
 

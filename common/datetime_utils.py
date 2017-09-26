@@ -4,6 +4,13 @@ import datetime
 class DateTimeUtils:
 
     @staticmethod
+    def stock_today():
+        if int(datetime.datetime.now().time().strftime('%H')) > 20:
+            return DateTimeUtils.today()
+        else:
+            return DateTimeUtils.bygone_day(1)
+
+    @staticmethod
     def date_to_string(date):
         return date.strftime('%Y-%m-%d')
 
@@ -16,13 +23,13 @@ class DateTimeUtils:
         return datetime.date.today()
 
     @staticmethod
-    def bygone_day(duration, start=None):
-        today = start if start is not None else DateTimeUtils.today()
+    def bygone_day(duration, end=None):
+        today = end if end is not None else DateTimeUtils.today()
         return today - datetime.timedelta(days=duration)
 
     @staticmethod
-    def start_end_date(duration, start=None):
-        today = start if start is not None else DateTimeUtils.today()
+    def start_end_date(duration, end=None):
+        today = end if end is not None else DateTimeUtils.today()
         str_today = DateTimeUtils.date_to_string(today)
         bygone_days = DateTimeUtils.bygone_day(duration, today)
         str_bygone_days = DateTimeUtils.date_to_string(bygone_days)

@@ -20,10 +20,6 @@ class Pipeline:
     def from_json(json_str):
         workflow = json.loads(json_str)
         _inputs = workflow['stock_ids']
-#        filter_dict = workflow['filter']
-#        json_filter_dict = json.dumps(filter_dict)
-#        _filter = Filter.from_json(json_filter_dict)
-
         _filter = Filter.from_json(json.dumps(workflow['filter']))
         return Pipeline(_inputs, _filter)
 
@@ -52,6 +48,11 @@ if __name__ == '__main__':
 
     condition = ConstantCondition(len(conditions), current_close, ComparisionOperator.GREATER, c_value)
     conditions.append(condition)
+
+    v_avg_5 = IndexValueFactory.create(IndexType.V_AVG, DateTimeUtils.date_from_string('2017-9-1'), 5)
+    v_avg_10 = IndexValueFactory.create(IndexType.V_AVG, DateTimeUtils.date_from_string('2017-9-1'), 10)
+    cond2 = IndexValueCondition(len(conditions), v_avg_5, ComparisionOperator.GREATER, v_avg_10)
+    conditions.append(cond2)
 
     con_filter = Filter(conditions)
 
